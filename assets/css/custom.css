@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e5e7eb;
+    min-width: 280px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu.profile-menu {
+    min-width: 240px;
+}
+
+.dropdown-overlay {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 999;
+    display: none;
+}
+
+.dropdown-overlay.show {
+    display: block;
+}
+
+.notification-badge {
+    animation: pulse-badge 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.notification-item {
+    transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+    background-color: #f9fafb;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@media (max-width: 768px) {
+    .dropdown-menu {
+        min-width: 260px;
+    }
+}
+
+.theme-light {
+    background-color: #f9fafb;
+    color: #1f2937;
+}
+
+.theme-dark {
+    background-color: #1f2937;
+    color: #f9fafb;
+}
+
+.theme-dark .bg-white {
+    background-color: #374151 !important;
+    color: #f9fafb !important;
+}
+
+.theme-dark .text-gray-900 {
+    color: #f9fafb !important;
+}
+
+.theme-dark .text-gray-600 {
+    color: #d1d5db !important;
+}
+
+.theme-dark .border-gray-100,
+.theme-dark .border-gray-200 {
+    border-color: #4b5563 !important;
+}
+
+.theme-dark .bg-gray-50 {
+    background-color: #374151 !important;
+}
+
+.theme-dark .hover\:bg-gray-50:hover {
+    background-color: #4b5563 !important;
+}
+
+.hover-scale {
+    transition: transform 0.2s;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.card-shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s;
+}
+
+.card-shadow:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}

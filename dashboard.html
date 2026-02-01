@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin Dashboard Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/css/custom.css">
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <aside id="sidebar" class="bg-slate-800 w-64 flex-shrink-0 hidden md:flex flex-col transition-all duration-300">
+            <div class="p-6 border-b border-slate-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-cyan-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="layout-dashboard" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-lg">AdminPanel</h1>
+                        <p class="text-gray-400 text-xs">Dashboard Template</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-b border-slate-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-slate-600 rounded-full flex items-center justify-center">
+                        <i data-lucide="user" class="w-5 h-5 text-gray-300"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white text-sm font-medium" id="userName">Admin</p>
+                        <p class="text-gray-400 text-xs" id="userRole">Administrator</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 text-white bg-cyan-600 rounded-lg">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+                <a href="users.html" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span class="font-medium">Users</span>
+                </a>
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span class="font-medium">Analytics</span>
+                </a>
+                <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span class="font-medium">Settings</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-700 space-y-2">
+                <a href="https://bagasaria93.github.io" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    <span class="font-medium">Back to Portfolio</span>
+                </a>
+                <button onclick="logout()" class="w-full flex items-center space-x-3 px-4 py-3 text-red-400 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span class="font-medium">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button id="sidebarToggle" class="md:hidden text-gray-600 hover:text-gray-900">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
+                            <p class="text-sm text-gray-600">Welcome back to your dashboard</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="toggleTheme()" class="text-gray-600 hover:text-gray-900 transition">
+                            <i data-lucide="moon" id="themeIcon" class="w-6 h-6"></i>
+                        </button>
+
+                        <div class="dropdown">
+                            <button onclick="toggleNotifications()" class="relative text-gray-600 hover:text-gray-900 transition">
+                                <i data-lucide="bell" class="w-6 h-6"></i>
+                                <span id="notificationBadge" class="notification-badge absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">5</span>
+                            </button>
+                            
+                            <div id="notificationDropdown" class="dropdown-menu">
+                                <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+                                    <h3 class="font-bold text-gray-900">Notifications</h3>
+                                    <button onclick="markAllAsRead()" class="text-xs text-cyan-600 hover:text-cyan-700 font-medium">Mark all read</button>
+                                </div>
+                                <div class="max-h-96 overflow-y-auto">
+                                    <div class="notification-item p-4 border-b border-gray-50 cursor-pointer">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                                <i data-lucide="user-plus" class="w-5 h-5 text-cyan-600"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-semibold text-gray-900">New User Registered</p>
+                                                <p class="text-xs text-gray-600 mt-1">John Doe joined the platform</p>
+                                                <p class="text-xs text-gray-400 mt-1">5 minutes ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item p-4 border-b border-gray-50 cursor-pointer">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                                <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-semibold text-gray-900">Report Generated</p>
+                                                <p class="text-xs text-gray-600 mt-1">Monthly analytics report is ready</p>
+                                                <p class="text-xs text-gray-400 mt-1">1 hour ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="notification-item p-4 border-b border-gray-50 cursor-pointer">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-semibold text-gray-900">System Update</p>
+                                                <p class="text-xs text-gray-600 mt-1">New update available for installation</p>
+                                                <p class="text-xs text-gray-400 mt-1">3 hours ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-3 border-t border-gray-100 text-center">
+                                    <a href="#" class="text-sm text-cyan-600 hover:text-cyan-700 font-medium">View all notifications</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dropdown">
+                            <button onclick="toggleProfile()" class="w-10 h-10 bg-cyan-600 rounded-full flex items-center justify-center hover:bg-cyan-700 transition">
+                                <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                            </button>
+                            
+                            <div id="profileDropdown" class="dropdown-menu profile-menu">
+                                <div class="p-4 border-b border-gray-100">
+                                    <p class="font-semibold text-gray-900" id="headerUserName">Admin User</p>
+                                    <p class="text-xs text-gray-600" id="headerUserRole">Administrator</p>
+                                </div>
+                                <div class="py-2">
+                                    <a href="#" class="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition">
+                                        <i data-lucide="user-circle" class="w-5 h-5 text-gray-600"></i>
+                                        <span class="text-sm text-gray-700">My Profile</span>
+                                    </a>
+                                    <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition">
+                                        <i data-lucide="settings" class="w-5 h-5 text-gray-600"></i>
+                                        <span class="text-sm text-gray-700">Settings</span>
+                                    </a>
+                                    <a href="#" class="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition">
+                                        <i data-lucide="help-circle" class="w-5 h-5 text-gray-600"></i>
+                                        <span class="text-sm text-gray-700">Help & Support</span>
+                                    </a>
+                                </div>
+                                <div class="border-t border-gray-100 py-2">
+                                    <button onclick="logout()" class="w-full flex items-center space-x-3 px-4 py-3 hover:bg-red-50 transition text-left">
+                                        <i data-lucide="log-out" class="w-5 h-5 text-red-600"></i>
+                                        <span class="text-sm text-red-600 font-medium">Logout</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="dropdownOverlay" class="dropdown-overlay" onclick="closeAllDropdowns()"></div>
+
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="users" class="w-6 h-6 text-cyan-600"></i>
+                            </div>
+                            <span class="text-xs text-green-600 font-semibold">+12.5%</span>
+                        </div>
+                        <h3 class="text-gray-600 text-sm font-medium mb-1">Total Users</h3>
+                        <p class="text-3xl font-bold text-gray-900" id="totalUsers">0</p>
+                        <p class="text-xs text-gray-500 mt-2">Active registered users</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="trending-up" class="w-6 h-6 text-green-600"></i>
+                            </div>
+                            <span class="text-xs text-green-600 font-semibold">+8.2%</span>
+                        </div>
+                        <h3 class="text-gray-600 text-sm font-medium mb-1">Revenue</h3>
+                        <p class="text-3xl font-bold text-gray-900">$45,280</p>
+                        <p class="text-xs text-gray-500 mt-2">This month earnings</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="shopping-cart" class="w-6 h-6 text-amber-600"></i>
+                            </div>
+                            <span class="text-xs text-red-600 font-semibold">-3.1%</span>
+                        </div>
+                        <h3 class="text-gray-600 text-sm font-medium mb-1">Orders</h3>
+                        <p class="text-3xl font-bold text-gray-900" id="totalOrders">0</p>
+                        <p class="text-xs text-gray-500 mt-2">Pending & completed</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i data-lucide="activity" class="w-6 h-6 text-purple-600"></i>
+                            </div>
+                            <span class="text-xs text-green-600 font-semibold">+15.3%</span>
+                        </div>
+                        <h3 class="text-gray-600 text-sm font-medium mb-1">Conversion</h3>
+                        <p class="text-3xl font-bold text-gray-900">3.24%</p>
+                        <p class="text-xs text-gray-500 mt-2">Visit to sale ratio</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Revenue Overview</h3>
+                        <div style="height: 250px;">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">User Distribution</h3>
+                        <div style="height: 250px;">
+                            <canvas id="userChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Traffic Sources</h3>
+                        <div style="height: 200px;">
+                            <canvas id="trafficChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="p-6 border-b border-gray-100">
+                            <h3 class="text-lg font-bold text-gray-900">Recent Activities</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">User</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Action</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Time</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activitiesTable" class="divide-y divide-gray-100">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <a href="users.html" class="flex items-center space-x-4 p-4 border-2 border-gray-200 rounded-lg hover:border-cyan-600 hover:bg-cyan-50 transition group">
+                            <div class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center group-hover:bg-cyan-600 transition">
+                                <i data-lucide="user-plus" class="w-6 h-6 text-cyan-600 group-hover:text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Add User</p>
+                                <p class="text-xs text-gray-600">Create new account</p>
+                            </div>
+                        </a>
+
+                        <a href="analytics.html" class="flex items-center space-x-4 p-4 border-2 border-gray-200 rounded-lg hover:border-green-600 hover:bg-green-50 transition group">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-600 transition">
+                                <i data-lucide="file-text" class="w-6 h-6 text-green-600 group-hover:text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Generate Report</p>
+                                <p class="text-xs text-gray-600">View analytics</p>
+                            </div>
+                        </a>
+
+                        <a href="settings.html" class="flex items-center space-x-4 p-4 border-2 border-gray-200 rounded-lg hover:border-purple-600 hover:bg-purple-50 transition group">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-600 transition">
+                                <i data-lucide="settings" class="w-6 h-6 text-purple-600 group-hover:text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Settings</p>
+                                <p class="text-xs text-gray-600">Configure system</p>
+                            </div>
+                        </a>
+
+                        <a href="#" onclick="exportData(); return false;" class="flex items-center space-x-4 p-4 border-2 border-gray-200 rounded-lg hover:border-amber-600 hover:bg-amber-50 transition group">
+                            <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center group-hover:bg-amber-600 transition">
+                                <i data-lucide="download" class="w-6 h-6 text-amber-600 group-hover:text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Export Data</p>
+                                <p class="text-xs text-gray-600">Download CSV</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden md:hidden">
+        <div class="bg-slate-800 w-64 h-full">
+            <div class="p-6 border-b border-slate-700 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-cyan-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="layout-dashboard" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-lg">AdminPanel</h1>
+                        <p class="text-gray-400 text-xs">Dashboard Template</p>
+                    </div>
+                </div>
+                <button id="closeMobileMenu" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <nav class="p-4 space-y-2">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 text-white bg-cyan-600 rounded-lg">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+                <a href="users.html" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span class="font-medium">Users</span>
+                </a>
+                <a href="analytics.html" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span class="font-medium">Analytics</span>
+                </a>
+                <a href="settings.html" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span class="font-medium">Settings</span>
+                </a>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700 space-y-2">
+                <a href="https://bagasaria93.github.io" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    <span class="font-medium">Back to Portfolio</span>
+                </a>
+                <button onclick="logout()" class="w-full flex items-center space-x-3 px-4 py-3 text-red-400 hover:bg-slate-700 rounded-lg transition">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span class="font-medium">Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed top-4 right-4 bg-cyan-600 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+        <div class="flex items-center space-x-3">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <script src="data/sample-data.js"></script>
+    <script src="assets/js/storage.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script>
+        if (!isAuthenticated()) {
+            window.location.href = 'index.html';
+        }
+
+        const user = getCurrentUser();
+        document.getElementById('userName').textContent = user.fullName;
+        document.getElementById('userRole').textContent = user.role;
+        document.getElementById('headerUserName').textContent = user.fullName;
+        document.getElementById('headerUserRole').textContent = user.role;
+
+        lucide.createIcons();
+
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.remove('hidden');
+            setTimeout(() => lucide.createIcons(), 100);
+        });
+
+        document.getElementById('closeMobileMenu').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.add('hidden');
+        });
+
+        document.getElementById('mobileMenu').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+
+        function loadDashboardData() {
+            const users = getUsers();
+            const activities = getActivities();
+
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalOrders').textContent = 156;
+
+            const recentActivities = activities.slice(-5).reverse();
+            const activitiesHtml = recentActivities.map(a => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${a.userName}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${a.action}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${formatDateTime(a.timestamp)}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${a.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}">
+                            ${a.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById('activitiesTable').innerHTML = activitiesHtml;
+
+            setTimeout(() => lucide.createIcons(), 100);
+
+            renderRevenueChart();
+            renderUserChart();
+            renderTrafficChart();
+        }
+
+        function exportData() {
+            const users = getUsers();
+            const data = users.map(u => ({
+                Name: u.name,
+                Email: u.email,
+                Role: u.role,
+                Status: u.status
+            }));
+            exportToCSV(data, 'users-export.csv');
+        }
+
+        loadDashboardData();
+    </script>
+</body>
+</html>
